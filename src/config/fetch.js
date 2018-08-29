@@ -5,11 +5,17 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 	url = baseUrl + url;
 
 	if (type == 'GET') {
-		let dataStr = ''; //数据拼接字符串
-		Object.keys(data).forEach(key => {
-			dataStr += key + '=' + data[key] + '&';
-		})
-
+        
+        //alert('in get')
+        
+        let dataStr = '';
+        if (data != null){
+            Object.keys(data).forEach(key => {
+                dataStr += key + '=' + data[key] + '&';
+            })
+         }
+        //alert('dataStr='+dataStr);
+		
 		if (dataStr !== '') {
 			dataStr = dataStr.substr(0, dataStr.lastIndexOf('&'));
 			url = url + '?' + dataStr;
@@ -17,6 +23,9 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 	}
 
 	if (window.fetch && method == 'fetch') {
+	   
+	   // alert('in fetch');
+	   
 		let requestConfig = {
 			credentials: 'include',
 			method: type,
@@ -35,9 +44,13 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 		}
 		
 		try {
+		   
+		   // alert(url);
+		   
 			const response = await fetch(url, requestConfig);
+			
 			const responseJson = await response.json();
-			return responseJson
+            return responseJson
 		} catch (error) {
 			throw new Error(error)
 		}

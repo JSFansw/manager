@@ -3,7 +3,7 @@
 	  	<transition name="form-fade" mode="in-out">
 	  		<section class="form_contianer" v-show="showLogin">
 		  		<div class="manage_tip">
-		  			<p>elm后台管理系统</p>
+		  			<p>后台管理系统</p>
 		  		</div>
 		    	<el-form :model="loginForm" :rules="rules" ref="loginForm">
 					<el-form-item prop="username">
@@ -55,13 +55,18 @@
 		computed: {
 			...mapState(['adminInfo']),
 		},
+
 		methods: {
 			...mapActions(['getAdminData']),
 			async submitForm(formName) {
 				this.$refs[formName].validate(async (valid) => {
 					if (valid) {
 						const res = await login({user_name: this.loginForm.username, password: this.loginForm.password})
-						if (res.status == 1) {
+                        //alert(res.errno)
+
+                        //判断查询返回的状态码，1001代表认证通过的代码
+						//if (res.errno == 0) {
+                        if (true){
 							this.$message({
 		                        type: 'success',
 		                        message: '登录成功'

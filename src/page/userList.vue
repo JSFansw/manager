@@ -5,24 +5,28 @@
             <el-table
                 :data="tableData"
                 highlight-current-row
+                stripe="true"
                 style="width: 100%">
                 <el-table-column
                   type="index"
+                  sortable
+                  label="序号"
                   width="100">
                 </el-table-column>
                 <el-table-column
                   property="registe_time"
+                  sortable
                   label="注册日期"
                   width="220">
                 </el-table-column>
                 <el-table-column
                   property="username"
-                  label="用户姓名"
+                  label="微信名"
                   width="220">
                 </el-table-column>
                 <el-table-column
-                  property="city"
-                  label="注册地址">
+                  property="phone"
+                  label="手机号">
                 </el-table-column>
             </el-table>
             <div class="Pagination" style="text-align: left;margin-top: 10px;">
@@ -48,19 +52,7 @@
                 tableData: [{
                   registe_time: '2016-05-02',
                   username: '王小虎',
-                  city: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                  registe_time: '2016-05-04',
-                  username: '王小虎',
-                  city: '上海市普陀区金沙江路 1517 弄'
-                }, {
-                  registe_time: '2016-05-01',
-                  username: '王小虎',
-                  city: '上海市普陀区金沙江路 1519 弄'
-                }, {
-                  registe_time: '2016-05-03',
-                  username: '王小虎',
-                  city: '上海市普陀区金沙江路 1516 弄'
+                  phone: '18896735689'
                 }],
                 currentRow: null,
                 offset: 0,
@@ -79,8 +71,8 @@
             async initData(){
                 try{
                     const countData = await getUserCount();
-                    if (countData.status == 1) {
-                        this.count = countData.count;
+                    if (countData !== null) {
+                        this.count = countData.data.count;
                     }else{
                         throw new Error('获取数据失败');
                     }
@@ -98,13 +90,18 @@
                 this.getUsers()
             },
             async getUsers(){
-                const Users = await getUserList({offset: this.offset, limit: this.limit});
+                //const Users = await getUserList({offset: this.offset, limit: this.limit});
+                const userList = await getUserList({page: this.offset, size: this.limit});
+                //alert('users='+Users.data.data[0].id);
+                const Users = userList.data.data;
                 this.tableData = [];
                 Users.forEach(item => {
                     const tableData = {};
-                    tableData.username = item.username;
-                    tableData.registe_time = item.registe_time;
-                    tableData.city = item.city;
+                    const time = new Date(item.register_time);
+                    let localTime = time.getFullYear()+'-'+time.getMonth()+'-'+time.getDate()+'  '+time.getHours()+':'+time.getMinutes();
+                    tableData.username = item.nickname;
+                    tableData.registe_time = localTime;
+                    tableData.phone = item.mobile;
                     this.tableData.push(tableData);
                 })
             }
